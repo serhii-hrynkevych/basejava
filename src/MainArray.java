@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Scanner;
 
 /**
  * Interactive test for ArrayStorage implementation
@@ -12,6 +13,7 @@ public class MainArray {
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         Resume r;
+        int countingUuid = 0;
         while (true) {
             System.out.print("Введите одну из команд - (list | size | save uuid | delete uuid | get uuid | clear | exit): ");
             String[] params = reader.readLine().trim().toLowerCase().split(" ");
@@ -32,16 +34,17 @@ public class MainArray {
                     break;
                 case "save":
                     r = new Resume();
-                    r.uuid = uuid;
+                    r.uuid = uuid + countingUuid;
+                    countingUuid++;
                     ARRAY_STORAGE.save(r);
                     printAll();
                     break;
                 case "delete":
-                    ARRAY_STORAGE.delete(uuid);
+                    ARRAY_STORAGE.delete(inputUuid());
                     printAll();
                     break;
                 case "get":
-                    System.out.println(ARRAY_STORAGE.get(uuid));
+                    System.out.println(ARRAY_STORAGE.get(inputUuid()));
                     break;
                 case "clear":
                     ARRAY_STORAGE.clear();
@@ -67,5 +70,11 @@ public class MainArray {
             }
         }
         System.out.println("----------------------------");
+    }
+
+    static String inputUuid() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Введите uuid:");
+        return scanner.nextLine();
     }
 }
