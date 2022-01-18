@@ -12,96 +12,81 @@ public class ArrayStorage {
     private int size = 0;
 
     public void clear() {
-        Arrays.fill(storage, 0, size - 1, null);
-
-//        storage = new Resume[10000];
-
-//        for (int i = 0; i < size; i++) {
-//            storage[i] = null;
-//        }
-        size = 0;
+        if (size != 0) {
+            Arrays.fill(storage, 0, size - 1, null);
+            size = 0;
+        } else {
+            System.out.println("Storage is already empty");
+        }
     }
 
     public void update(Resume r) {
-        if (checkResume(r.getUuid())) {
+        int i = checkResume(r.getUuid());
+        if (i != -1) {
             get(r.getUuid()).setUuid(r.getUuid() + "update");
-            System.out.println("Update - OK");
+            System.out.println("Update Resume UUID: " + r.getUuid() + " - OK");
         } else {
-            System.out.println("ERROR");
+            System.out.println("ERROR - Resume UUID: " + r.getUuid() + " - not found");
         }
 
     }
 
     public void save(Resume r) {
-        if (size == 10001) {
+        int i = checkResume(r.getUuid());
+        if (size == storage.length) {
             System.out.println("ERROR - storage is full");
-        } else if (!checkResume(r.getUuid())) {
-            int newPositionInStorage = size;
-            storage[newPositionInStorage] = r;
+        } else if (i == -1) {
+            storage[size] = r;
             size++;
-            System.out.println("Save - OK");
+            System.out.println("Save Resume UUID: " + r.getUuid() + " - OK");
         } else {
-            System.out.println("ERROR - already have resume");
+            System.out.println("ERROR - Resume UUID: " + r.getUuid() + " - already have resume");
         }
-
     }
 
     public Resume get(String uuid) {
-        for (int i = 0; i < size; i++) {
-            if (storage[i].getUuid().equals(uuid)) {
-                return storage[i];
-            }
+        int i = checkResume(uuid);
+        if (i != -1) {
+            return storage[i];
+        } else {
+            System.out.println("ERROR - Resume UUID: " + uuid + " - not found");
         }
         return null;
     }
 
     public void delete(String uuid) {
-        if (checkResume(uuid)) {
-            for (int i = 0; i < size; i++) {
-                if (storage[i].getUuid().equals(uuid)) {
-                    storage[i] = storage[size - 1];
-                    storage[size - 1] = null;
-                    size--;
-                    System.out.println("Delete - OK");
-                }
-            }
+        int i = checkResume(uuid);
+        if (i != -1) {
+            storage[i] = storage[size - 1];
+            storage[size - 1] = null;
+            size--;
+            System.out.println("Delete Resume UUID: " + uuid + " - OK");
         } else {
-            System.out.println("ERROR - resume not found");
+            System.out.println("ERROR - Resume UUID: " + uuid + " - not found");
         }
-
-//        int deletePosition = 0;
-//        for (int i = deletePosition; i < size; i++) {
-//            if (i == size() - 1) {
-//                storage[i] = null;
-//                size--;
-//            } else {
-//                storage[i] = storage[i + 1];
-//            }
-//        }
     }
 
     /**
      * @return array, contains only Resumes in storage (without null)
      */
     public Resume[] getAll() {
+        Resume[] result = new Resume[size];
         if (size > 0) {
-            return Arrays.copyOfRange(storage, 0, size - 1);
+            result = Arrays.copyOfRange(storage, 0, size - 1);
         }
-//        Resume[] allResumes = new Resume[size()];
-//        if (size() >= 0) System.arraycopy(storage, 0, allResumes, 0, size);
-        return new Resume[0];
+        return result;
     }
 
     public int size() {
         return size;
     }
 
-    private boolean checkResume(String uuid) {
+    private int checkResume(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
-                return true;
+                return i;
             }
         }
-        return false;
+        return -1;
     }
 }
