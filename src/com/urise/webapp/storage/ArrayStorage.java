@@ -13,7 +13,7 @@ public class ArrayStorage {
 
     public void clear() {
         if (size != 0) {
-            Arrays.fill(storage, 0, size - 1, null);
+            Arrays.fill(storage, 0, size, null);
             size = 0;
         } else {
             System.out.println("Storage is already empty");
@@ -21,41 +21,42 @@ public class ArrayStorage {
     }
 
     public void update(Resume r) {
-        int i = checkResume(r.getUuid());
-        if (i != -1) {
-            get(r.getUuid()).setUuid(r.getUuid() + "update");
-            System.out.println("Update Resume UUID: " + r.getUuid() + " - OK");
+        String uuid = r.getUuid();
+        int index = findIndex(uuid);
+        if (index != -1) {
+            storage[index].setUuid(uuid + "update");
+            System.out.println("Update Resume UUID: " + uuid + " - OK");
         } else {
-            System.out.println("ERROR - Resume UUID: " + r.getUuid() + " - not found");
+            System.out.println("ERROR - Resume UUID: " + uuid + " - not found");
         }
 
     }
 
     public void save(Resume r) {
-        int i = checkResume(r.getUuid());
+        String uuid = r.getUuid();
+        int i = findIndex(uuid);
         if (size == storage.length) {
             System.out.println("ERROR - storage is full");
         } else if (i == -1) {
             storage[size] = r;
             size++;
-            System.out.println("Save Resume UUID: " + r.getUuid() + " - OK");
+            System.out.println("Save Resume UUID: " + uuid + " - OK");
         } else {
-            System.out.println("ERROR - Resume UUID: " + r.getUuid() + " - already have resume");
+            System.out.println("ERROR - Resume UUID: " + uuid + " - already have resume");
         }
     }
 
     public Resume get(String uuid) {
-        int i = checkResume(uuid);
+        int i = findIndex(uuid);
         if (i != -1) {
             return storage[i];
-        } else {
-            System.out.println("ERROR - Resume UUID: " + uuid + " - not found");
         }
+        System.out.println("ERROR - Resume UUID: " + uuid + " - not found");
         return null;
     }
 
     public void delete(String uuid) {
-        int i = checkResume(uuid);
+        int i = findIndex(uuid);
         if (i != -1) {
             storage[i] = storage[size - 1];
             storage[size - 1] = null;
@@ -66,22 +67,15 @@ public class ArrayStorage {
         }
     }
 
-    /**
-     * @return array, contains only Resumes in storage (without null)
-     */
     public Resume[] getAll() {
-        Resume[] result = new Resume[size];
-        if (size > 0) {
-            result = Arrays.copyOfRange(storage, 0, size - 1);
-        }
-        return result;
+        return Arrays.copyOf(storage, size);
     }
 
     public int size() {
         return size;
     }
 
-    private int checkResume(String uuid) {
+    private int findIndex(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
                 return i;
