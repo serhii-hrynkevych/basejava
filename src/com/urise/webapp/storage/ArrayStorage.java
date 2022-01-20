@@ -24,7 +24,7 @@ public class ArrayStorage {
         String uuid = r.getUuid();
         int index = findIndex(uuid);
         if (index != -1) {
-            storage[index].setUuid(uuid + "update");
+            storage[index] = r;
             System.out.println("Update Resume UUID: " + uuid + " - OK");
         } else {
             System.out.println("ERROR - Resume UUID: " + uuid + " - not found");
@@ -34,10 +34,10 @@ public class ArrayStorage {
 
     public void save(Resume r) {
         String uuid = r.getUuid();
-        int i = findIndex(uuid);
+        int index = findIndex(uuid);
         if (size == storage.length) {
             System.out.println("ERROR - storage is full");
-        } else if (i == -1) {
+        } else if (index == -1) {
             storage[size] = r;
             size++;
             System.out.println("Save Resume UUID: " + uuid + " - OK");
@@ -47,18 +47,18 @@ public class ArrayStorage {
     }
 
     public Resume get(String uuid) {
-        int i = findIndex(uuid);
-        if (i != -1) {
-            return storage[i];
+        int index = findIndex(uuid);
+        if (index != -1) {
+            return storage[index];
         }
         System.out.println("ERROR - Resume UUID: " + uuid + " - not found");
         return null;
     }
 
     public void delete(String uuid) {
-        int i = findIndex(uuid);
-        if (i != -1) {
-            storage[i] = storage[size - 1];
+        int index = findIndex(uuid);
+        if (index != -1) {
+            storage[index] = storage[size - 1];
             storage[size - 1] = null;
             size--;
             System.out.println("Delete Resume UUID: " + uuid + " - OK");
