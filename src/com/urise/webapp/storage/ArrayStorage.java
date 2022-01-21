@@ -7,11 +7,12 @@ import java.util.Arrays;
 /**
  * Array based storage for Resumes
  */
-public class ArrayStorage {
+public class ArrayStorage implements Storage{
     private static final int STORAGE_LIMIT = 10000;
     private final Resume[] storage = new Resume[STORAGE_LIMIT];
     private int size = 0;
 
+    @Override
     public void clear() {
         if (size != 0) {
             Arrays.fill(storage, 0, size, null);
@@ -21,6 +22,7 @@ public class ArrayStorage {
         }
     }
 
+    @Override
     public void update(Resume r) {
         String uuid = r.getUuid();
         int index = findIndex(uuid);
@@ -33,6 +35,7 @@ public class ArrayStorage {
 
     }
 
+    @Override
     public void save(Resume r) {
         String uuid = r.getUuid();
         int index = findIndex(uuid);
@@ -47,6 +50,7 @@ public class ArrayStorage {
         }
     }
 
+    @Override
     public Resume get(String uuid) {
         int index = findIndex(uuid);
         if (index != -1) {
@@ -56,6 +60,7 @@ public class ArrayStorage {
         return null;
     }
 
+    @Override
     public void delete(String uuid) {
         int index = findIndex(uuid);
         if (index != -1) {
@@ -68,10 +73,12 @@ public class ArrayStorage {
         }
     }
 
+    @Override
     public Resume[] getAll() {
         return Arrays.copyOfRange(storage, 0, size);
     }
 
+    @Override
     public int size() {
         return size;
     }
