@@ -10,60 +10,15 @@ import java.util.Arrays;
 public class ArrayStorage extends AbstractArrayStorage {
 
     @Override
-    public void clear() {
-        if (size != 0) {
-            Arrays.fill(storage, 0, size, null);
-            size = 0;
-        } else {
-            System.out.println("Storage is already empty");
-        }
+    protected void addResume(Resume r, int index) {
+        storage[size] = r;
     }
 
     @Override
-    public void update(Resume r) {
-        String uuid = r.getUuid();
-        int index = findIndex(uuid);
-        if (index != -1) {
-            storage[index] = r;
-            System.out.println("Update Resume UUID: " + uuid + " - OK");
-        } else {
-            System.out.println("ERROR - Resume UUID: " + uuid + " - not found");
-        }
-
-    }
-
-    @Override
-    public void save(Resume r) {
-        String uuid = r.getUuid();
-        int index = findIndex(uuid);
-        if (size == STORAGE_LIMIT) {
-            System.out.println("ERROR - storage is full");
-        } else if (index == -1) {
-            storage[size] = r;
-            size++;
-            System.out.println("Save Resume UUID: " + uuid + " - OK");
-        } else {
-            System.out.println("ERROR - Resume UUID: " + uuid + " - already have resume");
-        }
-    }
-
-
-    @Override
-    public void delete(String uuid) {
-        int index = findIndex(uuid);
-        if (index != -1) {
+    protected void deleteResume(int index) {
+        if (size - 1 - index != 0) {
             storage[index] = storage[size - 1];
-            storage[size - 1] = null;
-            size--;
-            System.out.println("Delete Resume UUID: " + uuid + " - OK");
-        } else {
-            System.out.println("ERROR - Resume UUID: " + uuid + " - not found");
         }
-    }
-
-    @Override
-    public Resume[] getAll() {
-        return Arrays.copyOfRange(storage, 0, size);
     }
 
     protected int findIndex(String uuid) {
