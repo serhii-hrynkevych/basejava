@@ -38,8 +38,7 @@ public class MainArray {
                     System.out.println(ARRAY_STORAGE.size());
                     break;
                 case "save":
-                    r = new Resume();
-                    r.setUuid(uuid + countingUuid);
+                    r = new Resume(uuid + countingUuid);
                     countingUuid++;
                     ARRAY_STORAGE.save(r);
                     printAll();
